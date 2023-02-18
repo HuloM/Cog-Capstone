@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cogent_do_connect?useSSL=false
+    username: root
+    password: Password123
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
