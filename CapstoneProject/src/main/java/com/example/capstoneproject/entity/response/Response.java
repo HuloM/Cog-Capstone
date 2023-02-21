@@ -1,4 +1,4 @@
-package com.example.capstoneproject.entity;
+package com.example.capstoneproject.entity.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

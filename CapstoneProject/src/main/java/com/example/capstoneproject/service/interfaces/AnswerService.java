@@ -8,8 +8,8 @@ public interface AnswerService {
     Answer addAnswer(Answer answer);
     List<Answer> getAllAnswer();
     List<Answer> getAllAnswerFalse();
-    Answer getAnswerById(Long id);
-    Answer getAnswerByQuestionId(Long id);
+    Answer getAnswerById(int id);
+    Answer getAnswerByQuestionId(int id);
     Answer updateAnswer(Answer answer);
-    String deleteAnswerById(Long id);
+    String deleteAnswerById(int id);
 }

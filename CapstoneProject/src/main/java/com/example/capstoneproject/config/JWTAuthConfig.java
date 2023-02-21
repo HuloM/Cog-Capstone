@@ -9,13 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -27,6 +23,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class JWTAuthConfig {
     @Autowired
     private UserDetailService userDetailsService;
+
     @Autowired
     private JWTFilter jwtFilter;
 
@@ -43,8 +40,8 @@ public class JWTAuthConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) ->
                         auth
-                                .requestMatchers("/User/adduser").permitAll()
-                                .requestMatchers("/User/getByLogin").permitAll()
+                                .requestMatchers("/api/v1/user/register").permitAll()
+                                .requestMatchers("/api/v1/user/authenticate").permitAll()
                                 .anyRequest().authenticated().and()
                                 .addFilterBefore(jwtFilter,  UsernamePasswordAuthenticationFilter.class))
                 .httpBasic(withDefaults()).formLogin();
@@ -64,7 +61,6 @@ public class JWTAuthConfig {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoderConfig.passwordEncoder());
-        System.out.println(authProvider);
         return authProvider;
     }
 }

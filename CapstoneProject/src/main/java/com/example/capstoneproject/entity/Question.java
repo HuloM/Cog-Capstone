@@ -1,5 +1,6 @@
 package com.example.capstoneproject.entity;
 
+import com.example.capstoneproject.entity.dto.QuestionDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,12 +21,22 @@ public class Question {
     private String description_question;
     private String image_src;
     private String datetime;
-    private String status;
     private String topic;
     private String title;
+    private boolean isApproved;
     @OneToMany(mappedBy = "question", fetch= FetchType.EAGER)
     @JsonIgnore
     private List<Answer> answers;
-    private String qcreated_by;
-    private String qapproved_by;
+    private String created_by;
+    private String approved_by;
+
+    public Question(QuestionDTO dto) {
+        this.description_question = dto.getDescription_question();
+        this.datetime = dto.getDatetime();
+        this.topic = dto.getTopic();
+        this.title = dto.getTitle();
+        this.created_by = dto.getCreated_by();
+        this.isApproved = false;
+        this.approved_by = "";
+    }
 }

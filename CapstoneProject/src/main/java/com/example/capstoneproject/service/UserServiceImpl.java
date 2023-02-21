@@ -43,4 +43,9 @@ public class UserServiceImpl implements UserService {
         repository.deleteById(id);
         return "User removed" + id;
     }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return repository.findByUsername(username);
+    }
 }
