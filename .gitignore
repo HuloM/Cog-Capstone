@@ -1,6 +1,6 @@
 # Compiled class file
 *.class
-
+.mvn/
 # Log file
 *.log
 
@@ -44,7 +44,7 @@ yarn-error.log
 *.sublime-workspace
 
 # Visual Studio Code
-/.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -64,3 +64,7 @@ testem.log
 .DS_Store
 Thumbs.db
 /uploads/*
+*.PNG
+
+CapstoneProject/mvnw.cmd
+CapstoneProject/mvnw
