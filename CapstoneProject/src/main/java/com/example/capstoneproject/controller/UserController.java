@@ -7,13 +7,17 @@ import com.example.capstoneproject.entity.User;
 import com.example.capstoneproject.entity.response.UserResponse;
 import com.example.capstoneproject.service.interfaces.UserService;
 import com.example.capstoneproject.util.JWTUtil;
+import com.example.capstoneproject.util.SessionUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -29,6 +33,8 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private SessionUserUtil sessionUserUtil = new SessionUserUtil();
 
     @GetMapping("/")
     public Response home() {
@@ -54,7 +60,8 @@ public class UserController {
     @PutMapping("/update")
     public Response updateUser(@RequestBody User user) {
         // Check if currently authenticated user is the same as the user being updated
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != user.getUsername())
+
+        if (!Objects.equals(sessionUserUtil.getSessionUser(), user.getUsername()))
             return new Response("You are not authorized to update this user", -1, HttpStatus.UNAUTHORIZED.value());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));

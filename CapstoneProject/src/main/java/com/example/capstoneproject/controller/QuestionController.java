@@ -1,17 +1,18 @@
 package com.example.capstoneproject.controller;
 
 import com.example.capstoneproject.entity.Question;
+import com.example.capstoneproject.entity.User;
 import com.example.capstoneproject.entity.dto.QuestionDTO;
 import com.example.capstoneproject.entity.dto.QuestionUpdateDTO;
 import com.example.capstoneproject.entity.response.Response;
 import com.example.capstoneproject.service.interfaces.QuestionService;
 import com.example.capstoneproject.service.interfaces.StorageService;
+import com.example.capstoneproject.service.interfaces.UserService;
+import com.example.capstoneproject.util.SessionUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/question")
@@ -20,7 +21,12 @@ public class QuestionController {
     private QuestionService questionService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private  StorageService storageService;
+
+    private SessionUserUtil sessionUserUtil = new SessionUserUtil();
 
     @GetMapping("/getAll")
     public Response getAllQuestions() {
@@ -40,8 +46,7 @@ public class QuestionController {
     }
     @PostMapping("/add")
     public Response addQuestion(@ModelAttribute QuestionDTO qDTO, @RequestParam("file") MultipartFile file) {
-        String creator = SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal().toString();
+        String creator = sessionUserUtil.getSessionUser();
 
         qDTO.setCreated_by(creator);
 
@@ -54,11 +59,11 @@ public class QuestionController {
     }
     @PutMapping("/update")
     public Response updateQuestion(@RequestBody QuestionUpdateDTO qDTO) {
-        String creator = SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal().toString();
+        String creator = sessionUserUtil.getSessionUser();
+        User user = userService.getUserByUsername(creator);
         Question question = questionService.getQuestionById(qDTO.getId());
 
-        if(!question.getCreated_by().equals(creator) || !creator.equals("admin")) {
+        if(!question.getCreated_by().equals(creator) || !user.getUserType().equals("admin")) {
             return new Response("You are not allowed to update this question", 1,403);
         }
 
@@ -71,11 +76,12 @@ public class QuestionController {
     }
     @DeleteMapping("/delete/{id}")
     public Response deleteQuestion(@PathVariable int id) {
-        String creator = SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal().toString();
+        String creator = sessionUserUtil.getSessionUser();
+        User user = userService.getUserByUsername(creator);
+
         Question question = questionService.getQuestionById(id);
 
-        if(!question.getCreated_by().equals(creator) || !creator.equals("admin")) {
+        if(!question.getCreated_by().equals(creator) || !user.getUserType().equals("admin")) {
             return new Response("You are not allowed to delete this question", 1,403);
         }
 
