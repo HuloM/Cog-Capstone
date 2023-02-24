@@ -42,6 +42,7 @@ public class JWTAuthConfig {
                         auth
                                 .requestMatchers("/api/v1/user/register").permitAll()
                                 .requestMatchers("/api/v1/user/authenticate").permitAll()
+                                .requestMatchers("/api/v1/storage/getImage/**").permitAll()
                                 .anyRequest().authenticated().and()
                                 .addFilterBefore(jwtFilter,  UsernamePasswordAuthenticationFilter.class))
                 .httpBasic(withDefaults()).formLogin();
