@@ -1,7 +1,13 @@
 package com.example.capstoneproject.entity.response;
 
 import com.example.capstoneproject.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
     private int id;
     private String name;

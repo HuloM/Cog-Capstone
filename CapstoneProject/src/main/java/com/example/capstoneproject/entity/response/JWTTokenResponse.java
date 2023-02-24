@@ -9,4 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JWTTokenResponse {
     private String token;
+    private String username;
+    private String role;
 }

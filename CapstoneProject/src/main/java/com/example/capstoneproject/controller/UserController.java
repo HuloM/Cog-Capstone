@@ -1,6 +1,7 @@
 package com.example.capstoneproject.controller;
 
 import com.example.capstoneproject.entity.AuthRequest;
+import com.example.capstoneproject.entity.dto.UserRegisterDTO;
 import com.example.capstoneproject.entity.response.JWTTokenResponse;
 import com.example.capstoneproject.entity.response.Response;
 import com.example.capstoneproject.entity.User;
@@ -12,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,18 +42,41 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public Response registerUser(@RequestBody User user) {
+    public Response registerUser(@RequestBody UserRegisterDTO dto) {
         // Check if user already exists in the database
-        if(userService.getUserByUsername(user.getUsername()) != null)
+        if(userService.getUserByUsername(dto.getUsername()) != null)
             return new Response("User already exists", -1, HttpStatus.BAD_REQUEST.value());
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        User user = new User(dto);
+
         user.setUserType("user");
 
         userService.AddUser(user);
 
         // returns the user object without the password field on successful registration
         return new Response("Successfully registered", new UserResponse(user), HttpStatus.CREATED.value());
+    }
+    @PostMapping("/registerAdmin")
+    public Response registerAdmin(@RequestBody UserRegisterDTO dto) {
+        User sessionUser = userService.getUserByUsername(sessionUserUtil.getSessionUser());
+
+        if(!sessionUser.getUserType().equals("admin")) {
+            return new Response("You are not authorized to register an admin", -1, HttpStatus.UNAUTHORIZED.value());
+        }
+
+        // Check if user already exists in the database
+        if(userService.getUserByUsername(dto.getUsername()) != null)
+            return new Response("User already exists", -1, HttpStatus.BAD_REQUEST.value());
+
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        User user = new User(dto);
+        user.setUserType("admin");
+
+        userService.AddUser(user);
+
+        // returns the user object without the password field on successful registration
+        return new Response("Successfully registered New Admin", new UserResponse(user), HttpStatus.CREATED.value());
     }
 
     @PutMapping("/update")
@@ -74,15 +96,17 @@ public class UserController {
 
     @PostMapping("/authenticate")
     public Response authenticateUser(@RequestBody AuthRequest authRequest) {
+        System.out.println(authRequest);
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (Exception ex) {
             // response if invalid username/password
             return new Response("invalid username/password", -1, HttpStatus.UNAUTHORIZED.value());
         }
+        User user = userService.getUserByUsername(authRequest.getUsername());
         return new Response("Successfully logged in",
-                new JWTTokenResponse(jwtUtil.generateToken(authRequest.getUserName())), HttpStatus.OK.value());
+                new JWTTokenResponse(jwtUtil.generateToken(authRequest.getUsername()), user.getUsername(), user.getUserType()), HttpStatus.OK.value());
     }
 }
