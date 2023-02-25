@@ -28,7 +28,6 @@ public class Answer {
 
     public Answer(AnswerDTO aDTO) {
         this.description_answer = aDTO.getDescription_answer();
-        this.img_src = aDTO.getImg_src();
         this.datetime = aDTO.getDatetime();
         this.created_by = aDTO.getCreated_by();
         this.isApproved = false;

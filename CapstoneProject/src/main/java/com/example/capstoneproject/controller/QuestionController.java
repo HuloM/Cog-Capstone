@@ -5,6 +5,7 @@ import com.example.capstoneproject.entity.User;
 import com.example.capstoneproject.entity.dto.QuestionDTO;
 import com.example.capstoneproject.entity.dto.QuestionUpdateDTO;
 import com.example.capstoneproject.entity.response.Response;
+import com.example.capstoneproject.service.FileRenameService;
 import com.example.capstoneproject.service.interfaces.QuestionService;
 import com.example.capstoneproject.service.interfaces.StorageService;
 import com.example.capstoneproject.service.interfaces.UserService;
@@ -25,6 +26,9 @@ public class QuestionController {
 
     @Autowired
     private  StorageService storageService;
+
+    @Autowired
+    private FileRenameService fileRenameService;
 
     private SessionUserUtil sessionUserUtil = new SessionUserUtil();
 
@@ -52,7 +56,7 @@ public class QuestionController {
 
         storageService.store(file);
         Question question = new Question(qDTO);
-        question.setImage_src(file.getOriginalFilename());
+        question.setImage_src(fileRenameService.getCurrentFileName());
 
         questionService.addQuestion(question);
         return new Response("successfully added question", question,201);

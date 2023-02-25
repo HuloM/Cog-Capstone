@@ -25,6 +25,8 @@ import java.util.stream.Stream;
 public class StorageServiceImpl implements StorageService {
 
     private final Path rootLocation;
+    @Autowired
+    private FileRenameService fileRenameService;
 
     @Autowired
     public StorageServiceImpl(StorageProperties properties) {
@@ -49,8 +51,10 @@ public class StorageServiceImpl implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
+            fileRenameService.setCurrentFileName(file.getName() + System.currentTimeMillis() + "." + file.getOriginalFilename().split("\\.")[1]);
+            String filename = fileRenameService.getCurrentFileName();
             Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(file.getOriginalFilename()))
+                            Paths.get(filename))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
                 // This is a security check

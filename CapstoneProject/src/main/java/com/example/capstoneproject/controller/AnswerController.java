@@ -3,8 +3,10 @@ package com.example.capstoneproject.controller;
 import com.example.capstoneproject.entity.Answer;
 import com.example.capstoneproject.entity.dto.AnswerDTO;
 import com.example.capstoneproject.entity.dto.AnswerUpdateDTO;
+import com.example.capstoneproject.service.FileRenameService;
 import com.example.capstoneproject.service.interfaces.AnswerService;
 import com.example.capstoneproject.service.interfaces.StorageService;
+import com.example.capstoneproject.util.SessionUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,10 @@ public class AnswerController {
     private AnswerService answerService;
     @Autowired
     private StorageService storageService;
+    @Autowired
+    private FileRenameService fileRenameService;
+
+    private SessionUserUtil sessionUserUtil = new SessionUserUtil();
 
     @GetMapping("/getAll")
     public List<Answer> getAllAnswers() {
@@ -37,17 +43,14 @@ public class AnswerController {
         return answerService.getAnswerByQuestionId(id);
     }
     @PostMapping("/add")
-    public Answer addAnswer(@RequestBody AnswerDTO aDTO, @RequestParam("file") MultipartFile file) {
-        String creator = SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal().toString();
-
-        aDTO.setCreated_by(creator);
+    public Answer addAnswer(@ModelAttribute AnswerDTO aDTO, @RequestParam("file") MultipartFile file) {
+        aDTO.setCreated_by(sessionUserUtil.getSessionUser());
 
         storageService.store(file);
 
         Answer answer = new Answer(aDTO);
 
-        answer.setImg_src(file.getOriginalFilename());
+        answer.setImg_src(fileRenameService.getCurrentFileName());
 
         return answerService.addAnswer(answer);
     }
