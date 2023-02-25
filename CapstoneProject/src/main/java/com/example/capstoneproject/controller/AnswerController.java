@@ -2,6 +2,7 @@ package com.example.capstoneproject.controller;
 
 import com.example.capstoneproject.entity.Answer;
 import com.example.capstoneproject.entity.Question;
+import com.example.capstoneproject.entity.User;
 import com.example.capstoneproject.entity.dto.AnswerDTO;
 import com.example.capstoneproject.entity.dto.AnswerUpdateDTO;
 import com.example.capstoneproject.entity.response.Response;
@@ -9,6 +10,7 @@ import com.example.capstoneproject.service.FileRenameService;
 import com.example.capstoneproject.service.interfaces.AnswerService;
 import com.example.capstoneproject.service.interfaces.QuestionService;
 import com.example.capstoneproject.service.interfaces.StorageService;
+import com.example.capstoneproject.service.interfaces.UserService;
 import com.example.capstoneproject.util.SessionUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ public class AnswerController {
     private AnswerService answerService;
     @Autowired
     private StorageService storageService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private FileRenameService fileRenameService;
     @Autowired
@@ -75,7 +79,31 @@ public class AnswerController {
     }
     @DeleteMapping("/delete/{id}")
     public Response deleteAnswer(@PathVariable int id) {
+        String username = sessionUserUtil.getSessionUser();
+        User user = userService.getUserByUsername(username);
+
+        Answer answer = answerService.getAnswerById(id);
+
+        if(!answer.getCreated_by().equals(username) && !user.getUserType().equals("admin")) {
+            return new Response("You are not allowed to delete this question", 1,403);
+        }
+
         answerService.deleteAnswerById(id);
         return new Response("successfully deleted answer with id: " + id, null,200);
+    }
+    @PostMapping("/approve/{id}")
+    public Response approveAnswer(@PathVariable int id) {
+        String username = sessionUserUtil.getSessionUser();
+        User user = userService.getUserByUsername(username);
+
+        if(!user.getUserType().equals("admin")) {
+            return new Response("You are not allowed to approve this question", 1,403);
+        }
+
+        Answer answer = answerService.getAnswerById(id);
+        answer.setApproved_by(username);
+        answer.setApproved(true);
+        answerService.updateAnswer(answer);
+        return new Response("successfully approved answer with id: " + id, answer,200);
     }
 }

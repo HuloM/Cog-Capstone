@@ -80,12 +80,12 @@ public class QuestionController {
     }
     @DeleteMapping("/delete/{id}")
     public Response deleteQuestion(@PathVariable int id) {
-        String creator = sessionUserUtil.getSessionUser();
-        User user = userService.getUserByUsername(creator);
+        String username = sessionUserUtil.getSessionUser();
+        User user = userService.getUserByUsername(username);
 
         Question question = questionService.getQuestionById(id);
 
-        if(!question.getCreated_by().equals(creator) && !user.getUserType().equals("admin")) {
+        if(!question.getCreated_by().equals(username) && !user.getUserType().equals("admin")) {
             return new Response("You are not allowed to delete this question", 1,403);
         }
 
@@ -98,15 +98,15 @@ public class QuestionController {
     }
     @PostMapping("/approve/{id}")
     public Response approveQuestion(@PathVariable int id) {
-        String creator = sessionUserUtil.getSessionUser();
-        User user = userService.getUserByUsername(creator);
+        String username = sessionUserUtil.getSessionUser();
+        User user = userService.getUserByUsername(username);
 
         Question question = questionService.getQuestionById(id);
 
         if(!user.getUserType().equals("admin")) {
             return new Response("You are not allowed to approve this question", 1,403);
         }
-
+        question.setApproved_by(username);
         question.setApproved(true);
         questionService.updateQuestion(question);
         return new Response("successfully approved question with id: " + id, 1,200);
