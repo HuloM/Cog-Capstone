@@ -1,6 +1,7 @@
 package com.example.capstoneproject.service;
 
 import com.example.capstoneproject.entity.Answer;
+import com.example.capstoneproject.entity.Question;
 import com.example.capstoneproject.repository.AnswerRepository;
 import com.example.capstoneproject.service.interfaces.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,8 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Answer getAnswerByQuestionId(int id) {
-        return repository.findByQuestionId(id);
+    public List<Answer> getAnswerByQuestionId(Question quest) {
+        return repository.findByQuestionId(quest);
     }
 
     @Override

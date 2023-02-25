@@ -1,6 +1,7 @@
 package com.example.capstoneproject.service.interfaces;
 
 import com.example.capstoneproject.entity.Answer;
+import com.example.capstoneproject.entity.Question;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface AnswerService {
     List<Answer> getAllAnswer();
     List<Answer> getAllAnswerFalse();
     Answer getAnswerById(int id);
-    Answer getAnswerByQuestionId(int id);
+    List<Answer> getAnswerByQuestionId(Question quest);
     Answer updateAnswer(Answer answer);
     String deleteAnswerById(int id);
 }

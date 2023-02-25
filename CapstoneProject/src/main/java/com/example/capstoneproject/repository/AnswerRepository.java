@@ -1,6 +1,7 @@
 package com.example.capstoneproject.repository;
 
 import com.example.capstoneproject.entity.Answer;
+import com.example.capstoneproject.entity.Question;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -12,5 +13,5 @@ public interface AnswerRepository extends CrudRepository<Answer, Integer> {
     List<Answer> findAllByIsFalse();
 
     @Query("SELECT a FROM Answer a WHERE a.question = ?1")
-    Answer findByQuestionId(int id);
+    List<Answer> findByQuestionId(Question quest);
 }

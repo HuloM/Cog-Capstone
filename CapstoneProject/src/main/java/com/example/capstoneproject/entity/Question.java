@@ -24,7 +24,7 @@ public class Question {
     private String topic;
     private String title;
     private boolean isApproved;
-    @OneToMany(mappedBy = "question", fetch= FetchType.EAGER)
+    @OneToMany(mappedBy = "question", fetch= FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Answer> answers;
     private String created_by;
