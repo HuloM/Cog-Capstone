@@ -11,7 +11,6 @@ import com.example.capstoneproject.service.interfaces.StorageService;
 import com.example.capstoneproject.service.interfaces.UserService;
 import com.example.capstoneproject.util.SessionUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +24,7 @@ public class QuestionController {
     private UserService userService;
 
     @Autowired
-    private  StorageService storageService;
+    private StorageService storageService;
 
     @Autowired
     private FileRenameService fileRenameService;
