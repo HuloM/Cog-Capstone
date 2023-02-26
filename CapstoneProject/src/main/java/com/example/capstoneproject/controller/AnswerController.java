@@ -88,8 +88,8 @@ public class AnswerController {
             return new Response("You are not allowed to delete this question", 1,403);
         }
 
-        answerService.deleteAnswerById(id);
-        return new Response("successfully deleted answer with id: " + id, null,200);
+
+        return new Response("successfully deleted answer with id: " + id, answerService.deleteAnswerById(id),200);
     }
     @PostMapping("/approve/{id}")
     public Response approveAnswer(@PathVariable int id) {
