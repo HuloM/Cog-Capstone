@@ -43,18 +43,18 @@ public class QuestionController {
     public Response getQuestionById(@PathVariable int id) {
         return new Response("successfully got question with id: " + id, questionService.getQuestionById(id),200);
     }
-    @GetMapping("/getByTopic/{topic}")
-    public Response getQuestionByTopic(@PathVariable String topic) {
+    @GetMapping("/getByTopic")
+    public Response getQuestionByTopic(@RequestParam(name = "topic") String topic) {
         return new Response("successfully got all questions of topic: " + topic, questionService.getQuestionByTopic(topic),200);
     }
 
     @GetMapping("/getLikeTitle")
-    public Response getQuestionLikeTitle(@RequestBody String title) {
+    public Response getQuestionLikeTitle(@RequestParam(name = "title") String title) {
         return new Response("successfully got all questions with like title: " + title, questionService.getQuestionLikeTitle(title),200);
     }
 
     @GetMapping("/getLikeTitleAndTopic")
-    public Response getQuestionLikeTitleAndTopic(@RequestBody String title, String topic) {
+    public Response getQuestionLikeTitleAndTopic(@RequestParam(name = "title") String title,@RequestParam(name = "topic") String topic) {
         return new Response("successfully got all questions with like title: " + title + " and topic: " + topic, questionService.getQuestionLikeTitleAndTopic(title, topic),200);
     }
 
