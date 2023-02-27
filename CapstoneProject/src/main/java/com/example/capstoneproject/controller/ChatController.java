@@ -29,39 +29,42 @@ public class ChatController {
                 chatService.getChatByRecieverGroupBy(sender), 200);
     }
 
-    @GetMapping("/getChatsToSenderFromReciever/{reciever}")
-    public Response getChatsToSenderFromReciever(@PathVariable String recieverUsername) {
+    @GetMapping("/getChatsToSenderFromReceiver/{receiverUsername}")
+    public Response getChatsToSenderFromReceiver(@PathVariable String receiverUsername) {
         String sender = sessionUserUtil.getSessionUser();
 
-        User reciever = userService.getUserByUsername(recieverUsername);
+        User reciever = userService.getUserByUsername(receiverUsername);
         if (reciever == null) {
             return new Response("reciever does not exist", null, 400);
         }
 
-        return new Response("successfully got chats from " + reciever + " to " + sender,
+        return new Response("successfully got chats from " + reciever.getUsername() + " to " + sender,
                 chatService.getChatsToSenderFromReciever(sender, reciever.getUsername()), 200);
     }
 
-    @GetMapping("/getChatsFromSenderToReciever/{reciever}")
-    public Response getChatsFromSenderToReciever(@PathVariable String recieverUsername) {
+    @GetMapping("/getChatsFromSenderToReceiver/{receiverUsername}")
+    public Response getChatsFromSenderToReceiver(@PathVariable String receiverUsername) {
         String sender = sessionUserUtil.getSessionUser();
 
-        User reciever = userService.getUserByUsername(recieverUsername);
+        User reciever = userService.getUserByUsername(receiverUsername);
         if (reciever == null) {
-            return new Response("reciever does not exist", null, 400);
+            return new Response("receiver does not exist", null, 400);
         }
 
-        return new Response("successfully got chats from " + sender + " to " + reciever,
+        return new Response("successfully got chats from " + sender + " to " + reciever.getUsername(),
                 chatService.getChatsFromSenderToReciever(sender, reciever.getUsername()), 200);
     }
 
-    @PostMapping("/addChat")
+    @PostMapping("/add")
     public Response addChat(@RequestBody ChatDTO cDTO) {
         String sender = sessionUserUtil.getSessionUser();
-
-        User reciever = userService.getUserByUsername(cDTO.getReciever());
+        System.out.println("cDTO: " + cDTO);
+        System.out.println("sender: " + sender);
+        System.out.println("receiver: " + cDTO.getReceiver());
+        User reciever = userService.getUserByUsername(cDTO.getReceiver());
+        System.out.println(reciever);
         if (reciever == null) {
-            return new Response("reciever does not exist", null, 400);
+            return new Response("receiver does not exist", null, 400);
         }
 
         Chat chat = new Chat(cDTO);

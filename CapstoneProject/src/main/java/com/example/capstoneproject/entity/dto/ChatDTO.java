@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatDTO {
-    private String reciever;
+    private String receiver;
     private String message;
     private String datetime;
 }

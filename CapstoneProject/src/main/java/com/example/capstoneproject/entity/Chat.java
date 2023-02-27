@@ -21,7 +21,7 @@ public class Chat {
     private String datetime;
 
     public Chat(ChatDTO dto) {
-        this.to_user = dto.getReciever();
+        this.to_user = dto.getReceiver();
         this.message = dto.getMessage();
         this.datetime = dto.getDatetime();
     }
