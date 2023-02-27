@@ -40,6 +40,15 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<Question> getQuestionLikeTitle(String title) {
+        return repository.findLikeTitles(title);
+    }
+    @Override
+    public List<Question> getQuestionLikeTitleAndTopic(String title, String topic) {
+        return repository.findLikeTitlesAndTopic(title, topic);
+    }
+
+    @Override
     public Question updateQuestion(Question question) {
         return repository.save(question);
     }

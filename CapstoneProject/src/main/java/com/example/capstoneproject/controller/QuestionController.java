@@ -47,6 +47,17 @@ public class QuestionController {
     public Response getQuestionByTopic(@PathVariable String topic) {
         return new Response("successfully got all questions of topic: " + topic, questionService.getQuestionByTopic(topic),200);
     }
+
+    @GetMapping("/getLikeTitle")
+    public Response getQuestionLikeTitle(@RequestBody String title) {
+        return new Response("successfully got all questions with like title: " + title, questionService.getQuestionLikeTitle(title),200);
+    }
+
+    @GetMapping("/getLikeTitleAndTopic")
+    public Response getQuestionLikeTitleAndTopic(@RequestBody String title, String topic) {
+        return new Response("successfully got all questions with like title: " + title + " and topic: " + topic, questionService.getQuestionLikeTitleAndTopic(title, topic),200);
+    }
+
     @PostMapping("/add")
     public Response addQuestion(@ModelAttribute QuestionDTO qDTO, @RequestParam("file") MultipartFile file) {
         String creator = sessionUserUtil.getSessionUser();

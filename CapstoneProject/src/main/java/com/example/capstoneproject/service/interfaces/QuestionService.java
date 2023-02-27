@@ -10,6 +10,8 @@ public interface QuestionService {
     List<Question> getAllQuestionsFalse();
     Question getQuestionById(int id);
     List<Question> getQuestionByTopic(String topic);
+    List<Question> getQuestionLikeTitle(String title);
+    List<Question> getQuestionLikeTitleAndTopic(String title, String topic);
     Question updateQuestion(Question question);
     String deleteQuestionById(int id);
 }
