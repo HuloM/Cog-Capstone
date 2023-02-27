@@ -3,13 +3,11 @@ package com.example.capstoneproject.controller;
 import com.example.capstoneproject.service.interfaces.StorageService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 
 @RestController
